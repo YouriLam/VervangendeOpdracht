@@ -1,0 +1,163 @@
+---
+title: "Vervangende Opdracht"
+author: "Youri Lam"
+date: "`r Sys.Date()`"
+output: html_document
+params:
+  kankersoort: "kanker_van_de_luchtwegen"
+  geslacht: "Vrouw"
+  leeftijdsgroep: group:40-44
+---
+
+```{r setup, include = FALSE}
+library(tidyverse)
+```
+
+First, the necessary dataset is loaded into Rstudio. 
+
+```{r loaddata}
+data <- read.table(file = "data-raw/dataset_1.txt",header = TRUE) #load the data
+```
+
+After the data is loaded, it can be filtered to use the given parameters.
+
+```{r filterdata, eval=FALSE}
+data_filtered <- data %>% filter(kankersoort %in% params$kankersoort,
+                                 geslacht %in% params$geslacht,
+                                 leeftijdsgroep %in% params$leeftijdsgroep) #filter for the given parameters
+```
+
+```{r filtertest2, echo=FALSE}
+### This is purely here for execution in the Rmarkdown
+data_filtered <- data %>% filter(kankersoort %in% c("kanker_van_de_luchtwegen"),
+                                 geslacht %in% c("Vrouw"),
+                                 leeftijdsgroep %in% c("group:40-44"))
+
+```
+
+Finally, the data can be plotted:
+
+```{r plot1}
+plot_luchtwegen <- ggplot(data_filtered,
+                     aes(x = periode, y = cr, group = kankersoort, color = leeftijdsgroep))+
+  geom_line()+
+  geom_point(size = 1)+
+  labs(title = "Het aantal nieuwe diagnoses luchtwegkanker onder vrouwen tussen de 40 en 44 jaar door de jaren heen ",
+       y = "Aantal nieuwe diagnoses per 100.000 personen in de Nederlandse bevolking per jaar)",
+       x = "Periode")
+
+plot_luchtwegen
+```
+
+
+[Uit onderzoek blijkt](https://iknl.nl/kankersoorten/kanker-bij-jongvolwassenen) dat kanker steeds meer voorkomt bij jongvolwassenen. Vooral geslachtsorgaan kanker is steeds eerder te vinden. Om te kijken of er daadwerkelijk een stijging zit in de jongvolwassenen met deze kanker, wordt er gekeken naar de hoeveelheid diagnoses geslachtsorgaan kanker bij de leeftijdsgroepen 18 t/m 39 jaar, zowel bij mannen als vrouwen. 
+
+De grafieken die nodig zijn om een conclusie te trekken worden gemaakt door de Rmarkdown file genaamd "Parameter_graph" die [hier](https://github.com/YouriLam/VervangendeOpdracht) te vinden is. De parameters gebruikt zijn de kankersoort, leeftijdsgroep en geslacht. Door deze in te vullen zoals hieronder krijgen we de verschillende grafieken zoals te zien hier beneden. 
+
+```{r graph 2, eval=FALSE}
+rmarkdown::render("vervangende_opdracht_1.Rmd", params = list( kankersoort = "kanker_van_de_vrouwelijke_geslachtsorganen", geslacht = "Vrouw", leeftijdsgroep = c( "group:15-19","group:20-24","group:25-29","group:30-34","group:35-39")))
+
+```
+
+
+```{r hidden_1, echo=FALSE}
+data_filtered_v1990 <- data %>% filter(kankersoort %in% "kanker_van_de_vrouwelijke_geslachtsorganen",
+                                 geslacht %in% "Vrouw",
+                                 leeftijdsgroep %in% c( "group:15-19","group:20-24","group:25-29","group:30-34","group:35-39"),
+                                 periode == 1990) #filter for the given parameters
+```
+
+
+
+```{r plot2}
+plot_v1 <- ggplot(data_filtered_v1990,
+                     aes(x = leeftijdsgroep, y = cr, group = kankersoort, color = leeftijdsgroep))+
+  geom_point(size = 3)+
+  labs(title = "Het aantal nieuwe diagnoses geslachtorgaan kanker onder vrouwen in 1990 ",
+       y = "Aantal nieuwe diagnoses per 100.000 personen in de Nederlandse bevolking)",
+       x = "Leeftijdscategorie")
+```
+
+```{r graph 3, eval=FALSE}
+rmarkdown::render("vervangende_opdracht_1.Rmd", params = list( kankersoort = "kanker_van_de_vrouwelijke_geslachtsorganen", geslacht = "Vrouw", leeftijdsgroep = c( "group:15-19","group:20-24","group:25-29","group:30-34","group:35-39")))
+
+```
+
+
+```{r hidden_2, echo=FALSE}
+data_filtered_v2019 <- data %>% filter(kankersoort %in% "kanker_van_de_vrouwelijke_geslachtsorganen",
+                                 geslacht %in% "Vrouw",
+                                 leeftijdsgroep %in% c( "group:15-19","group:20-24","group:25-29","group:30-34","group:35-39"),
+                                 periode == 2019) #filter for the given parameters
+```
+
+
+
+```{r vplot2}
+plot_v2 <- ggplot(data_filtered_v2019,
+                     aes(x = leeftijdsgroep, y = cr, group = kankersoort, color = leeftijdsgroep))+
+  geom_point(size = 3)+
+  labs(title = "Het aantal nieuwe diagnoses geslachtorgaan kanker onder vrouwen in 2019 ",
+       y = "Aantal nieuwe diagnoses per 100.000 personen in de Nederlandse bevolking)",
+       x = "Leeftijdscategorie")
+```
+
+
+```{r mgraph 2, eval=FALSE}
+rmarkdown::render("vervangende_opdracht_1.Rmd", params = list( kankersoort = "kanker_van_de_mannelijke_geslachtsorganen", geslacht = "Man", leeftijdsgroep = c( "group:15-19","group:20-24","group:25-29","group:30-34","group:35-39")))
+
+```
+
+
+```{r hidden_3, echo=FALSE}
+data_filtered_m1990 <- data %>% filter(kankersoort %in% "kanker_van_de_mannelijke_geslachtsorganen",
+                                 geslacht %in% "Man",
+                                 leeftijdsgroep %in% c( "group:15-19","group:20-24","group:25-29","group:30-34","group:35-39"),
+                                 periode == 1990) #filter for the given parameters
+```
+
+
+
+
+```{r plot3}
+plot_m1 <- ggplot(data_filtered_m1990,
+                     aes(x = leeftijdsgroep, y = cr, group = kankersoort, color = leeftijdsgroep))+
+  geom_point(size = 3)+
+  labs(title = "Het aantal nieuwe diagnoses geslachtorgaan kanker onder mannen in 1990 ",
+       y = "Aantal nieuwe diagnoses per 100.000 personen in de Nederlandse bevolking)",
+       x = "Leeftijdscategorie")
+```
+
+```{r graph 4, eval=FALSE}
+rmarkdown::render("vervangende_opdracht_1.Rmd", params = list( kankersoort = "kanker_van_de_mannelijke_geslachtsorganen", geslacht = "Man", leeftijdsgroep = c( "group:15-19","group:20-24","group:25-29","group:30-34","group:35-39")))
+
+```
+
+
+```{r hidden_4, echo=FALSE}
+data_filtered_m2019 <- data %>% filter(kankersoort %in% "kanker_van_de_mannelijke_geslachtsorganen",
+                                 geslacht %in% "Man",
+                                 leeftijdsgroep %in% c( "group:15-19","group:20-24","group:25-29","group:30-34","group:35-39"),
+                                 periode == 2019) #filter for the given parameters
+```
+
+
+
+
+```{r plot4}
+plot_m2 <- ggplot(data_filtered_m2019,
+                     aes(x = leeftijdsgroep, y = cr, group = kankersoort, color = leeftijdsgroep))+
+  geom_point(size = 3)+
+  labs(title = "Het aantal nieuwe diagnoses geslachtorgaan kanker onder mannen in 2019 ",
+       y = "Aantal nieuwe diagnoses per 100.000 personen in de Nederlandse bevolking)",
+       x = "Leeftijdscategorie")
+```
+
+```{r, figures-side, fig.show="hold", out.width="50%"}
+plot(plot_v1)
+plot(plot_v2)
+plot(plot_m1)
+plot(plot_m2)
+```
+
+De conclusies die te trekken zijn uit deze grafieken is dat er bij de groepen 25-39 bij beide geslachten wel degelijk een verhoging van diagnoses geslachtsorgaan kanker te zien is. Desalniettemin is daarentegen geen verhoging maar juist een verlaging te zien in de diagnoses bij de leeftijdsgroep 15-24.
